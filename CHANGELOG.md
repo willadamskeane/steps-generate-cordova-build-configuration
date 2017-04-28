@@ -1,6 +1,11 @@
-## Changelog (Current version: 0.9.1)
+## Changelog (Current version: 0.9.2)
 
 -----------------
+
+### 0.9.2 (2017 Apr 28)
+
+* [f2a480d] prepare for 0.9.2
+* [f601b11] fixed missing default value `package_type` input (#4)
 
 ### 0.9.1 (2017 Apr 28)
 
