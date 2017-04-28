@@ -3,7 +3,7 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 
 app:
   envs:
-  - STEP_VERSION: 0.9.0
+  - STEP_VERSION: 0.9.1
 
 workflows:
   test:
@@ -104,6 +104,25 @@ workflows:
             rm -rf ./vendor
             go get -t -d ./...
             godep save ./...
+
+  # ----------------------------------------------------------------
+  # --- workflows for Releasing
+  create-release:
+    title: Create Release version
+    steps:
+    - script:
+        title: Create CHANGELOG and git release
+        inputs:
+        - content: |-
+            #!/bin/bash
+            set -ex
+
+            go get github.com/bitrise-tools/releaseman
+
+            export CI=true
+
+            releaseman create-changelog \
+              --version $STEP_VERSION \
 
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library
