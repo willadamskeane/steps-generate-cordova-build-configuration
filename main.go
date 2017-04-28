@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 	"github.com/bitrise-io/go-utils/fileutil"
 	"github.com/bitrise-io/go-utils/log"
 	"github.com/bitrise-io/go-utils/pathutil"
+	"github.com/bitrise-tools/go-steputils/input"
 )
 
 // ConfigsModel ...
@@ -66,10 +66,12 @@ func (configs ConfigsModel) print() {
 }
 
 func (configs ConfigsModel) validate() error {
-	if configs.Configuration == "" {
-		return errors.New("no Configuration parameter specified")
-	} else if configs.Configuration != "release" && configs.Configuration != "debug" {
-		return fmt.Errorf(`invalid Configuration value provided: %s, available: ["release", "debug"]`, configs.Configuration)
+	if err := input.ValidateWithOptions(configs.Configuration, "release", "debug"); err != nil {
+		return fmt.Errorf("Configuration: %s", err)
+	}
+
+	if err := input.ValidateWithOptions(configs.PackageType, "none", "development", "enterprise", "ad-hoc", "app-store"); err != nil {
+		return fmt.Errorf("PackageType: %s", err)
 	}
 
 	return nil
@@ -182,7 +184,7 @@ func main() {
 	}
 
 	// iOS Build Config
-	if configs.CodeSignIdentity != "" || configs.ProvisioningProfile != "" || configs.DevelopmentTeam != "" || configs.PackageType != "" {
+	if configs.PackageType != "none" {
 		fmt.Println()
 		log.Infof("Adding ios build config")
 
