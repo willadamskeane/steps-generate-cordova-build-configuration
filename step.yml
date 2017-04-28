@@ -41,7 +41,7 @@ inputs:
       title: "GUID of the provisioning profile"
       description: |-
         GUID of the provisioning profile to be used for signing.
-  - package_type: development
+  - package_type: 
     opts:
       title: "Package type"
       description: |-
@@ -51,7 +51,6 @@ inputs:
       - enterprise
       - ad-hoc
       - app-store
-
   - keystore_url: $BITRISEIO_ANDROID_KEYSTORE_URL
     opts:
       title: "Code signing rules"
