@@ -83,6 +83,6 @@ inputs:
 outputs:
   - BITRISE_CORDOVA_BUILD_CONFIGURATION:
     opts:
-      title: "The development team (Team ID)"
+      title: "The generated build configuration's path"
       description: |-
-        The generated build configuration file.
+        The generated build configuration's path.
