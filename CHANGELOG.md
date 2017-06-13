@@ -1,6 +1,12 @@
-## Changelog (Current version: 0.9.2)
+## Changelog (Current version: 0.9.3)
 
 -----------------
+
+### 0.9.3 (2017 Jun 13)
+
+* [1cd93ec] prepare for 0.9.3
+* [af24047] step.yml updates (#6)
+* [8de0709] Update step.yml
 
 ### 0.9.2 (2017 Apr 28)
 
@@ -14,4 +20,4 @@
 
 -----------------
 
-Updated: 2017 Apr 28
+Updated: 2017 Jun 13
