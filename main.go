@@ -14,67 +14,22 @@ import (
 	"github.com/bitrise-io/go-utils/fileutil"
 	"github.com/bitrise-io/go-utils/log"
 	"github.com/bitrise-io/go-utils/pathutil"
-	"github.com/bitrise-tools/go-steputils/input"
+	"github.com/bitrise-tools/go-steputils/stepconf"
 )
 
 // ConfigsModel ...
 type ConfigsModel struct {
-	Configuration string
+	Configuration string `env:"configuration,required"`
 
-	DevelopmentTeam     string
-	CodeSignIdentity    string
-	ProvisioningProfile string
-	PackageType         string
+	DevelopmentTeam     string `env:"development_team"`
+	CodeSignIdentity    string `env:"code_sign_identity"`
+	ProvisioningProfile string `env:"provisioning_profile"`
+	PackageType         string `env:"package_type"`
 
-	KeystoreURL        string
-	KeystorePassword   string
-	KeystoreAlias      string
-	PrivateKeyPassword string
-}
-
-func createConfigsModelFromEnvs() ConfigsModel {
-	return ConfigsModel{
-		Configuration: os.Getenv("configuration"),
-
-		DevelopmentTeam:     os.Getenv("development_team"),
-		CodeSignIdentity:    os.Getenv("code_sign_identity"),
-		ProvisioningProfile: os.Getenv("provisioning_profile"),
-		PackageType:         os.Getenv("package_type"),
-
-		KeystoreURL:        os.Getenv("keystore_url"),
-		KeystorePassword:   os.Getenv("keystore_password"),
-		KeystoreAlias:      os.Getenv("keystore_alias"),
-		PrivateKeyPassword: os.Getenv("private_key_password"),
-	}
-}
-
-func (configs ConfigsModel) print() {
-	log.Infof("Configs:")
-	log.Printf("- Configuration: %s", configs.Configuration)
-
-	log.Infof("ios signing configs:")
-	log.Printf("- DevelopmentTeam: %s", configs.DevelopmentTeam)
-	log.Printf("- CodeSignIdentity: %s", configs.CodeSignIdentity)
-	log.Printf("- ProvisioningProfile: %s", configs.ProvisioningProfile)
-	log.Printf("- PackageType: %s", configs.PackageType)
-
-	log.Infof("android signing configs:")
-	log.Printf("- KeystoreURL: %s", configs.KeystoreURL)
-	log.Printf("- KeystorePassword: %s", configs.KeystorePassword)
-	log.Printf("- KeystoreAlias: %s", configs.KeystoreAlias)
-	log.Printf("- PrivateKeyPassword: %s", configs.PrivateKeyPassword)
-}
-
-func (configs ConfigsModel) validate() error {
-	if err := input.ValidateWithOptions(configs.Configuration, "release", "debug"); err != nil {
-		return fmt.Errorf("Configuration: %s", err)
-	}
-
-	if err := input.ValidateWithOptions(configs.PackageType, "none", "development", "enterprise", "ad-hoc", "app-store"); err != nil {
-		return fmt.Errorf("PackageType: %s", err)
-	}
-
-	return nil
+	KeystoreURL        string          `env:"keystore_url"`
+	KeystorePassword   stepconf.Secret `env:"keystore_password"`
+	KeystoreAlias      string          `env:"keystore_alias"`
+	PrivateKeyPassword stepconf.Secret `env:"private_key_password"`
 }
 
 // IOSBuildConfigurationItem ...
@@ -133,14 +88,11 @@ func fail(format string, v ...interface{}) {
 }
 
 func main() {
-	configs := createConfigsModelFromEnvs()
-
-	fmt.Println()
-	configs.print()
-
-	if err := configs.validate(); err != nil {
-		fail("Issue with input: %s", err)
+	var configs ConfigsModel
+	if err := stepconf.Parse(&configs); err != nil {
+		fail("Couldn't create config: %v\n", err)
 	}
+	stepconf.Print(configs)
 
 	buildConfig := BuildConfiguration{}
 
@@ -149,9 +101,10 @@ func main() {
 		fail("Failed to create tmp dir, error: %s", err)
 	}
 
+	fmt.Println()
+
 	// Android Build Config
 	if configs.KeystoreURL != "" {
-		fmt.Println()
 		log.Infof("Adding android build config")
 
 		keystorePath := ""
@@ -173,9 +126,9 @@ func main() {
 
 		androidBuildConfig := AndroidBuildConfigurationItem{
 			Keystore:      keystorePath,
-			StorePassword: configs.KeystorePassword,
+			StorePassword: string(configs.KeystorePassword),
 			Alias:         configs.KeystoreAlias,
-			Password:      configs.PrivateKeyPassword,
+			Password:      string(configs.PrivateKeyPassword),
 		}
 
 		buildConfig.Android = map[string]AndroidBuildConfigurationItem{
@@ -185,7 +138,6 @@ func main() {
 
 	// iOS Build Config
 	if configs.PackageType != "none" {
-		fmt.Println()
 		log.Infof("Adding ios build config")
 
 		iosBuildConfig := IOSBuildConfigurationItem{
@@ -214,8 +166,28 @@ func main() {
 		fail("Failed to marshal build config, error: %s", err)
 	}
 
-	log.Printf("content:")
-	log.Printf(string(buildConfigBytes))
+	{
+		printableConfigBytes := append([]byte{}, buildConfigBytes...)
+
+		if config, ok := buildConfig.Android[configs.Configuration]; ok {
+			if config.Password != "" {
+				config.Password = "*****"
+			}
+			if config.StorePassword != "" {
+				config.StorePassword = "*****"
+			}
+
+			buildConfig.Android[configs.Configuration] = config
+
+			printableConfigBytes, err = json.MarshalIndent(buildConfig, "", "  ")
+			if err != nil {
+				fail("Failed to marshal build config, error: %s", err)
+			}
+		}
+
+		log.Printf("content:")
+		log.Printf(string(printableConfigBytes))
+	}
 
 	buildConfigPth := filepath.Join(tmpDir, "build.json")
 	if err := fileutil.WriteBytesToFile(buildConfigPth, buildConfigBytes); err != nil {

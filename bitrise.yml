@@ -7,9 +7,11 @@ app:
 
 workflows:
   test:
-    before_run:
-    - go-tests
     steps:
+    - go-list:
+    - golint:
+    - errcheck:
+    - go-test:
     - script:
         inputs:
         - content: |-
@@ -31,79 +33,39 @@ workflows:
         - code_sign_identity: iPhone Developer
         - provisioning_profile: 
         - package_type: development
-
-  go-tests:
-    before_run:
-    - _install-test-tools
-    steps:
+        - keystore_url: file:///Users/godreikrisztian/keys/idopont.jks
+        - keystore_password: jedimester
+        - keystore_alias: key0
+        - private_key_password: jedimester
     - script:
-        title: Export go files to test
+        title: Output test
         inputs:
         - content: |-
             #!/bin/bash
-            set -ex
-            no_vendor_paths="$(go list ./... | grep -v vendor)"
-            envman add --key GOLIST_WITHOUT_VENDOR --value "$no_vendor_paths"
-    - script:
-        title: Err check
-        inputs:
-        - content: |-
-            #!/bin/bash
-            set -ex
-            errcheck -asserts=true -blank=true $GOLIST_WITHOUT_VENDOR
-    - script:
-        title: Go lint
-        inputs:
-        - content: |-
-            #!/bin/bash
-            set -ex
-            while read -r line; do
-              echo "-> Linting: $line"
-              golint_out="$(golint $line)"
-              if [[ "${golint_out}" != "" ]] ; then
-                echo "=> Golint issues found:"
-                echo "${golint_out}"
+            set -e
+            echo "BITRISE_CORDOVA_BUILD_CONFIGURATION: $BITRISE_CORDOVA_BUILD_CONFIGURATION"
+            if [[ -z "$BITRISE_CORDOVA_BUILD_CONFIGURATION" ]] ; then
+                echo "empty BITRISE_CORDOVA_BUILD_CONFIGURATION"
                 exit 1
-              fi
-            done <<< "$GOLIST_WITHOUT_VENDOR"
-    - script:
-        title: Go test
-        inputs:
-        - content: |-
-            #!/bin/bash
-            set -ex
-            go test ./...
-  _install-test-tools:
-    steps:
-    - script:
-        title: Install required testing tools
-        inputs:
-        - content: |-
-            #!/bin/bash
-            set -ex
-            # Check for unhandled errors
-            go get -u -v github.com/kisielk/errcheck
-            # Go lint
-            go get -u -v github.com/golang/lint/golint
+            fi
+            echo "BITRISE_CORDOVA_BUILD_CONFIGURATION content: $(cat $BITRISE_CORDOVA_BUILD_CONFIGURATION)"
 
   # ----------------------------------------------------------------
   # --- Utility workflows
-  godeps-update:
-    title: Godeps update
+  dep-update:
+    title: Dep update
     description: |
-      Used for updating bitrise dependencies with godep
+      Used for updating bitrise dependencies with dep
     steps:
     - script:
         title: Dependency update
         inputs:
-        - content: |
+        - content: |-
             #!/bin/bash
             set -ex
-            go get -u -v github.com/tools/godep
-            rm -rf ./Godeps
-            rm -rf ./vendor
-            go get -t -d ./...
-            godep save ./...
+            go get -u -v github.com/golang/dep/cmd/dep
+            dep ensure -v
+            dep ensure -v -update
 
   # ----------------------------------------------------------------
   # --- workflows for Releasing
