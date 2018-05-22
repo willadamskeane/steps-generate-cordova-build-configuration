@@ -1,6 +1,12 @@
-## Changelog (Current version: 0.9.3)
+## Changelog (Current version: 0.9.4)
 
 -----------------
+
+### 0.9.4 (2018 May 22)
+
+* [e0e0ff2] prepare for 0.9.4
+* [7742a1b] migrate to dep, secure inputs (#9)
+* [97dd535] step definition updates (#8)
 
 ### 0.9.3 (2017 Jun 13)
 
@@ -20,4 +26,4 @@
 
 -----------------
 
-Updated: 2017 Jun 13
+Updated: 2018 May 22
