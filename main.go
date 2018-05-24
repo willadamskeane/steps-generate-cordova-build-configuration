@@ -21,10 +21,11 @@ import (
 type ConfigsModel struct {
 	Configuration string `env:"configuration,required"`
 
-	DevelopmentTeam     string `env:"development_team"`
-	CodeSignIdentity    string `env:"code_sign_identity"`
-	ProvisioningProfile string `env:"provisioning_profile"`
-	PackageType         string `env:"package_type"`
+	DevelopmentTeam       string `env:"development_team"`
+	CodeSignIdentity      string `env:"code_sign_identity"`
+	AutomaticProvisioning string `env:"automatic_provisioning,opt[yes,no]"`
+	ProvisioningProfile   string `env:"provisioning_profile"`
+	PackageType           string `env:"package_type,opt[none,development,enterprise,ad-hoc,app-store]"`
 
 	KeystoreURL        string          `env:"keystore_url"`
 	KeystorePassword   stepconf.Secret `env:"keystore_password"`
@@ -34,10 +35,11 @@ type ConfigsModel struct {
 
 // IOSBuildConfigurationItem ...
 type IOSBuildConfigurationItem struct {
-	CodeSignIdentity    string `json:"codeSignIdentity,omitempty"`
-	ProvisioningProfile string `json:"provisioningProfile,omitempty"`
-	DevelopmentTeam     string `json:"developmentTeam,omitempty"`
-	PackageType         string `json:"packageType,omitempty"`
+	CodeSignIdentity      string `json:"codeSignIdentity,omitempty"`
+	ProvisioningProfile   string `json:"provisioningProfile,omitempty"`
+	DevelopmentTeam       string `json:"developmentTeam,omitempty"`
+	PackageType           string `json:"packageType,omitempty"`
+	AutomaticProvisioning bool   `json:"automaticProvisioning,omitempty"`
 }
 
 // AndroidBuildConfigurationItem ...
@@ -141,10 +143,11 @@ func main() {
 		log.Infof("Adding ios build config")
 
 		iosBuildConfig := IOSBuildConfigurationItem{
-			CodeSignIdentity:    configs.CodeSignIdentity,
-			ProvisioningProfile: configs.ProvisioningProfile,
-			DevelopmentTeam:     configs.DevelopmentTeam,
-			PackageType:         configs.PackageType,
+			CodeSignIdentity:      configs.CodeSignIdentity,
+			ProvisioningProfile:   configs.ProvisioningProfile,
+			DevelopmentTeam:       configs.DevelopmentTeam,
+			PackageType:           configs.PackageType,
+			AutomaticProvisioning: configs.AutomaticProvisioning == "yes",
 		}
 
 		buildConfig.IOS = map[string]IOSBuildConfigurationItem{

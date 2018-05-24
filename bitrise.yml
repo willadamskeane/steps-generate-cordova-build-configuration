@@ -31,12 +31,12 @@ workflows:
         - configuration: debug
         - development_team: 12345ABCDE
         - code_sign_identity: iPhone Developer
-        - provisioning_profile: 
+        - provisioning_profile: c5be4123-1234
         - package_type: development
-        - keystore_url: file:///Users/godreikrisztian/keys/idopont.jks
-        - keystore_password: jedimester
+        - keystore_url: file:///Users/bitrise/keys/key.jks
+        - keystore_password: pass
         - keystore_alias: key0
-        - private_key_password: jedimester
+        - private_key_password: pass
     - script:
         title: Output test
         inputs:
