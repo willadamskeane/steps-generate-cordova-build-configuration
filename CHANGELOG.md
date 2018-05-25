@@ -1,6 +1,11 @@
-## Changelog (Current version: 0.9.4)
+## Changelog (Current version: 0.9.5)
 
 -----------------
+
+### 0.9.5 (2018 May 25)
+
+* [0ae4f6d] prepare for 0.9.5
+* [e9f4a03] step definition update (#10)
 
 ### 0.9.4 (2018 May 22)
 
@@ -26,4 +31,4 @@
 
 -----------------
 
-Updated: 2018 May 22
+Updated: 2018 May 25
