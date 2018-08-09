@@ -86,16 +86,19 @@ inputs:
       title: Keystore password
       summary: Password to the keystore
       description: Password to the keystore.
+      is_sensitive: true
   - keystore_alias: $BITRISEIO_ANDROID_KEYSTORE_ALIAS
     opts:
       title: Alias
       summary: The id specifying the private key used for signing
       description: The id specifying the private key used for signing.
+      is_sensitive: true
   - private_key_password: $BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD
     opts:
       title: Password
       summary: Password for the private key specified
       description: Password for the private key specified.
+      is_sensitive: true
 outputs:
   - BITRISE_CORDOVA_BUILD_CONFIGURATION:
     opts:
