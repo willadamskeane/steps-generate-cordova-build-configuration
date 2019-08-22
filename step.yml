@@ -72,6 +72,12 @@ inputs:
       - enterprise
       - ad-hoc
       - app-store
+   - i_cloud_container_environment: "none"
+    opts:
+      title: iCloudContainerEnvironment
+      value_options:
+      - Development
+      - Production
   - keystore_url: $BITRISEIO_ANDROID_KEYSTORE_URL
     opts:
       title: Keystore
