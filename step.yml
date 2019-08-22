@@ -72,7 +72,7 @@ inputs:
       - enterprise
       - ad-hoc
       - app-store
-   - i_cloud_container_environment: "none"
+  - i_cloud_container_environment: "Production"
     opts:
       title: iCloudContainerEnvironment
       value_options:
