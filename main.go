@@ -21,34 +21,34 @@ import (
 type ConfigsModel struct {
 	Configuration string `env:"configuration,required"`
 
-	DevelopmentTeam       string `env:"development_team"`
-	CodeSignIdentity      string `env:"code_sign_identity"`
-	AutomaticProvisioning string `env:"automatic_provisioning,opt[yes,no]"`
-	ProvisioningProfile   string `env:"provisioning_profile"`
-	PackageType           string `env:"package_type,opt[none,development,enterprise,ad-hoc,app-store]"`
+	DevelopmentTeam            string `env:"development_team"`
+	CodeSignIdentity           string `env:"code_sign_identity"`
+	AutomaticProvisioning      string `env:"automatic_provisioning,opt[yes,no]"`
+	ProvisioningProfile        string `env:"provisioning_profile"`
+	PackageType                string `env:"package_type,opt[none,development,enterprise,ad-hoc,app-store]"`
 	iCloudContainerEnvironment string `env:"i_cloud_container_environment,opt[Development,Production]"`
-	KeystoreURL        string          `env:"keystore_url"`
-	KeystorePassword   stepconf.Secret `env:"keystore_password"`
-	KeystoreAlias      string          `env:"keystore_alias"`
-	PrivateKeyPassword stepconf.Secret `env:"private_key_password"`
+	KeystoreURL                string          `env:"keystore_url"`
+	KeystorePassword           stepconf.Secret `env:"keystore_password"`
+	KeystoreAlias              string          `env:"keystore_alias"`
+	PrivateKeyPassword         stepconf.Secret `env:"private_key_password"`
 }
 
 // IOSBuildConfigurationItem ...
 type IOSBuildConfigurationItem struct {
-	CodeSignIdentity      string `json:"codeSignIdentity,omitempty"`
-	ProvisioningProfile   string `json:"provisioningProfile,omitempty"`
-	DevelopmentTeam       string `json:"developmentTeam,omitempty"`
-	PackageType           string `json:"packageType,omitempty"`
+	CodeSignIdentity           string `json:"codeSignIdentity,omitempty"`
+	ProvisioningProfile        string `json:"provisioningProfile,omitempty"`
+	DevelopmentTeam            string `json:"developmentTeam,omitempty"`
+	PackageType                string `json:"packageType,omitempty"`
 	iCloudContainerEnvironment string `json:"iCloudContainerEnvironment,omitempty"`
-	AutomaticProvisioning bool   `json:"automaticProvisioning,omitempty"`
+	AutomaticProvisioning      bool   `json:"automaticProvisioning,omitempty"`
 }
 
 // AndroidBuildConfigurationItem ...
 type AndroidBuildConfigurationItem struct {
-	Keystore      string `json:"keystore,omitempty"`
-	StorePassword string `json:"storePassword,omitempty"`
-	Alias         string `json:"alias,omitempty"`
-	Password      string `json:"password,omitempty"`
+	Keystore                   string `json:"keystore,omitempty"`
+	StorePassword              string `json:"storePassword,omitempty"`
+	Alias                      string `json:"alias,omitempty"`
+	Password                   string `json:"password,omitempty"`
 }
 
 // BuildConfiguration ...
@@ -144,12 +144,12 @@ func main() {
 		log.Infof("Adding ios build config")
 
 		iosBuildConfig := IOSBuildConfigurationItem{
-			CodeSignIdentity:      configs.CodeSignIdentity,
-			ProvisioningProfile:   configs.ProvisioningProfile,
-			DevelopmentTeam:       configs.DevelopmentTeam,
-			PackageType:           configs.PackageType,
+			CodeSignIdentity:           configs.CodeSignIdentity,
+			ProvisioningProfile:        configs.ProvisioningProfile,
+			DevelopmentTeam:            configs.DevelopmentTeam,
+			PackageType:                configs.PackageType,
 			iCloudContainerEnvironment: configs.iCloudContainerEnvironment,
-			AutomaticProvisioning: configs.AutomaticProvisioning == "yes",
+			AutomaticProvisioning:      configs.AutomaticProvisioning == "yes",
 		}
 
 		buildConfig.IOS = map[string]IOSBuildConfigurationItem{
