@@ -26,7 +26,6 @@ type ConfigsModel struct {
 	AutomaticProvisioning      string `env:"automatic_provisioning,opt[yes,no]"`
 	ProvisioningProfile        string `env:"provisioning_profile"`
 	PackageType                string `env:"package_type,opt[none,development,enterprise,ad-hoc,app-store]"`
-	iCloudContainerEnvironment string `env:"i_cloud_container_environment,opt[Development,Production]"`
 	KeystoreURL                string          `env:"keystore_url"`
 	KeystorePassword           stepconf.Secret `env:"keystore_password"`
 	KeystoreAlias              string          `env:"keystore_alias"`
@@ -39,7 +38,7 @@ type IOSBuildConfigurationItem struct {
 	ProvisioningProfile        string `json:"provisioningProfile,omitempty"`
 	DevelopmentTeam            string `json:"developmentTeam,omitempty"`
 	PackageType                string `json:"packageType,omitempty"`
-	iCloudContainerEnvironment string `json:"iCloudContainerEnvironment,omitempty"`
+	ICloudContainerEnvironment string `json:"iCloudContainerEnvironment,omitempty"`
 	AutomaticProvisioning      bool   `json:"automaticProvisioning,omitempty"`
 }
 
@@ -148,7 +147,7 @@ func main() {
 			ProvisioningProfile:        configs.ProvisioningProfile,
 			DevelopmentTeam:            configs.DevelopmentTeam,
 			PackageType:                configs.PackageType,
-			iCloudContainerEnvironment: configs.iCloudContainerEnvironment,
+			ICloudContainerEnvironment: configs.ICloudContainerEnvironment,
 			AutomaticProvisioning:      configs.AutomaticProvisioning == "yes",
 		}
 
