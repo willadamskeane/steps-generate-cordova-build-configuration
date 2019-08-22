@@ -39,6 +39,7 @@ type IOSBuildConfigurationItem struct {
 	ProvisioningProfile   string `json:"provisioningProfile,omitempty"`
 	DevelopmentTeam       string `json:"developmentTeam,omitempty"`
 	PackageType           string `json:"packageType,omitempty"`
+	iCloudContainerEnvironment string `json:"iCloudContainerEnvironment,omitempty"`
 	AutomaticProvisioning bool   `json:"automaticProvisioning,omitempty"`
 }
 
@@ -91,7 +92,8 @@ func fail(format string, v ...interface{}) {
 
 func main() {
 	var configs ConfigsModel
-	if err := stepconf.Parse(&configs); err != nil {
+	if err := stepconf.Parse(&
+				); err != nil {
 		fail("Couldn't create config: %v\n", err)
 	}
 	stepconf.Print(configs)
@@ -147,6 +149,7 @@ func main() {
 			ProvisioningProfile:   configs.ProvisioningProfile,
 			DevelopmentTeam:       configs.DevelopmentTeam,
 			PackageType:           configs.PackageType,
+			iCloudContainerEnvironment: configs.iCloudContainerEnvironment,
 			AutomaticProvisioning: configs.AutomaticProvisioning == "yes",
 		}
 
