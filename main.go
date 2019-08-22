@@ -20,7 +20,7 @@ import (
 // ConfigsModel ...
 type ConfigsModel struct {
 	Configuration string `env:"configuration,required"`
-
+	
 	DevelopmentTeam            string `env:"development_team"`
 	CodeSignIdentity           string `env:"code_sign_identity"`
 	AutomaticProvisioning      string `env:"automatic_provisioning,opt[yes,no]"`
@@ -30,6 +30,7 @@ type ConfigsModel struct {
 	KeystorePassword           stepconf.Secret `env:"keystore_password"`
 	KeystoreAlias              string          `env:"keystore_alias"`
 	PrivateKeyPassword         stepconf.Secret `env:"private_key_password"`
+	ICloudContainerEnvironment string `env:"i_cloud_container_environment,opt[Development,Production]"`
 }
 
 // IOSBuildConfigurationItem ...
