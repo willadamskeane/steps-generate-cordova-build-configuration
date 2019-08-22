@@ -92,8 +92,7 @@ func fail(format string, v ...interface{}) {
 
 func main() {
 	var configs ConfigsModel
-	if err := stepconf.Parse(&
-				); err != nil {
+	if err := stepconf.Parse(&configs); err != nil {
 		fail("Couldn't create config: %v\n", err)
 	}
 	stepconf.Print(configs)
